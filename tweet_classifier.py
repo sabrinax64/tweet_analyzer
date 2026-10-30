@@ -90,16 +90,24 @@ def extract_features(tweet, extended_features):
     stopped_words = [token for token in lctokens if token not in stop_words]
 
     # FIXME: consider using lower case version and/or stems
-    for tok in tokens:
+    for tok in lctokens:
         features.append("word=" + tok)
 
     if extended_features:
-        pass # remove this once you have added some features
 
-        # FIXME: Add bigram features (suggestion: use the window function defined above)
-
+    
+            bigrams = ['_'.join([first, second]) for first, second in window(lctokens, 2)]
+            features.extend(bigrams)       
         # FIXME: Add other features -- be creative!
-
+            trigrams = ['_'.join([first, second, third]) for first, second, third in window(lctokens, 3)] 
+            features.extend(trigrams)   
+            upperct = 0
+            final = ""
+            for token in tokens:
+                if token.istitle():
+                    upperct += 1
+                    final = "caps=" + str(min(upperct,3))
+            features.append(final)
     return features
 
 
