@@ -73,18 +73,22 @@ def tweets_from_files():
 # General features
 def extract_features(tweet, extended_features):
     features = []
-
+    stems = []
     # FIXME: Change to use tokenization from twokenize.
-    tokens = tweet.split()
-
+    tokens = twokenize.tokenize(tweet)
     # FIXME: lower case the tokens
-    # lctokens = 
+  
+    lctokens = [token.lower() for token in tokens]
 
     # FIXME: Create stems here
-    # stems = ...
-
+    
+    stems = [stemmer.stem_token(token) for token in lctokens]
+    
+    #all:Validation loss: 0.878645122051239 Validation accuracy: 0.6163522012578616
     # Add unigram features. 
     # FIXME: exclude stop words
+    stopped_words = [token for token in lctokens if token not in stop_words]
+
     # FIXME: consider using lower case version and/or stems
     for tok in tokens:
         features.append("word=" + tok)
@@ -199,8 +203,8 @@ def majority_class_baseline(datasplit):
 #############################################################################
 # Predict sentiment based on ratio of positive and negative terms in a tweet
 def lexicon_ratio_baseline(tweet):
-
-    tokens = tweet.split()
+    tokens = twokenize.tokenize(tweet)
+   
 
     # FIXME: Count the number of positive and negative words in the tweet
     num_positive = 0
